@@ -69,6 +69,7 @@ public class EmployeeDAO {
     	String sql= "UPDATE employees SET name = ?, email= ?, department = ?, salary = ?, joining_date = ? where id = ?";
     	try(Connection con = DatabaseConnection.getConnection();
     			PreparedStatement ps = con.prepareStatement(sql)){
+    		
     			ps.setString(1, emp.getName());
     			ps.setString(2, emp.getEmail());
     			ps.setString(3, emp.getDepartment());
@@ -78,11 +79,53 @@ public class EmployeeDAO {
     			
     			int rows = ps.executeUpdate();
     			return rows >0;
+    			
     	}catch(SQLException e){
     		e.printStackTrace();
     		return false; 
     	}
     }
+    
+    public boolean deleteEmployee(int id) {
+    	String sql = "DELETE FROM employees WHERE id = ?";
+    	try(Connection con = DatabaseConnection.getConnection();
+    			PreparedStatement ps = con.prepareStatement(sql)){
+    			
+    			ps.setInt(1, id);    			
+    			
+    			int rows = ps.executeUpdate();
+    			return rows>0;
+    			
+    	}catch(SQLException e) {
+    		e.printStackTrace();
+    		return false;
+    	}
+    }
+    
+    
+    public void searchEmployee(int id) {
+    	String sql = "SELECT * FROM employees WHERE id = ?";
+    	try(Connection con = DatabaseConnection.getConnection();
+    			PreparedStatement ps = con.prepareStatement(sql)){
+    		ps.setInt(1, id);
+    		ResultSet rs  = ps.executeQuery();
+    		if (rs.next()) {
+    			System.out.println("\nEmployee found !!\n");
+    			System.out.println("ID : "+ rs.getInt("id"));
+    			System.out.println("Name: "+ rs.getString("name"));
+    			System.out.println("salary: "+ rs.getString("email"));
+    			System.out.println("Department: "+ rs.getString("department"));
+    			System.out.println("Salary: "+rs.getDouble("salary"));
+    		}else {
+    			System.out.println("Employee not found ");
+    		}
+    		con.close();	
+    			
+    		}catch (Exception e) {
+    			e.printStackTrace();
+    	}
+    }
+    
     
 
 }
